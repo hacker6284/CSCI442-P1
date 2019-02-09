@@ -4,7 +4,7 @@ SOURCES=P1.cpp P1_Classes.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 LIBS=
 LDFLAGS=
-PROGRAM=P1
+PROGRAM=simulator
 
 all: $(PROGRAM)
 

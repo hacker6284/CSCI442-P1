@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
 
       int cpuTime, ioTime;
       vector<Burst> thread;
-      for (int k = 0; k < numBursts; k++){
+      for (int k = 0; k < numBursts - 1; k++){
         fin >> cpuTime;
         fin >> ioTime;
         thread.push_back(Burst(cpuTime, ioTime));
