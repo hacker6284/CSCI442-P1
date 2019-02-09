@@ -10,6 +10,8 @@
 #include <vector>
 #include "P1_Classes.h"
 #include <algorithm>
+#include <functional>
+#include <queue>
 
 using namespace std;
 
@@ -23,7 +25,8 @@ int main(int argc, char* argv[]) {
     return 3;
   }
 
-  vector<Event> priorityQueue; //establish priority queue
+  //vector<Event> priorityQueue; //establish priority queue
+  priority_queue<Event, vector<Event>, Event> priorityQueue;
 
   //read in initial values
   int numProcesses, threadSwitchOverhead, processSwitchOverhead;
@@ -54,17 +57,18 @@ int main(int argc, char* argv[]) {
       fin >> cpuTime;
       thread.push_back(Burst(cpuTime, 0));
       process.push_back(Thread(arrivalTime, thread));
-      priorityQueue.push_back(Event(0, arrivalTime));
+      priorityQueue.push(Event(0, arrivalTime));
     }
     processes.push_back(Process(processID, processType, process));
   }
 
   //sort queue
-  sort(priorityQueue.begin(), priorityQueue.end(), compareEvents);
+  //sort(priorityQueue.begin(), priorityQueue.end(), compareEvents);
 
   //output events
-  for (int i = 0; i < priorityQueue.size(); i++){
-    cout << "THREAD_ARRIVED at " << priorityQueue.at(i).eventTime << " seconds" << endl;
+  while (!priorityQueue.empty()){
+    cout << "THREAD_ARRIVED at " << priorityQueue.top().eventTime << " seconds" << endl;
+    priorityQueue.pop();
   }
 
   //close the stream

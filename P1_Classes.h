@@ -38,6 +38,6 @@ public:
   int eventType;
   int eventTime;
   Event(int type, int t);
+  Event();
+  bool operator()(Event e1, Event e2);
 };
-
-bool compareEvents(Event e1, Event e2);

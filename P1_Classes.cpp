@@ -28,13 +28,18 @@ Process::Process(int pid, int type, vector<Thread> t){
   threads = t;
 }
 
+Event::Event(){
+  eventType = 0;
+  eventTime = 0;
+}
+
 Event::Event(int type, int t){
   eventType = type;
   eventTime = t;
 }
 
-bool compareEvents(Event e1, Event e2){
-  if (e1.eventTime < e2.eventTime){
+bool Event::operator()(Event e1, Event e2){
+  if (e1.eventTime > e2.eventTime){
     return true;
   }
   return false;
