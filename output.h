@@ -13,3 +13,7 @@ void printEvent(bool v, Event *event);
 string printEventType(int n);
 
 void printTransition(int n);
+
+void printThreadWiseProcess(Process* process);
+
+void processType(int ptype);

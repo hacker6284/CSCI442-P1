@@ -35,7 +35,7 @@ public:
 
   Thread(int arrival, vector<Burst> b, Process *p, int s, int id);
   Thread();
-  bool operator()(Thread *t1, Thread *t2);
+  bool operator()(Process *p1, Process *p2);
   void sumTimes();
 };
 
@@ -43,8 +43,8 @@ class Process{
 public:
   int processID;
   int processType;
-  vector<Thread> threads;
-  Process(int pid, int type, vector<Thread> t);
+  vector<Thread *> threads;
+  Process(int pid, int type, vector<Thread *> t);
   Process();
   bool operator()(Process *p1, Process *p2);
 };

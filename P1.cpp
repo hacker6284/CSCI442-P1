@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
 
   //create queues for threadwise output
   priority_queue<Process *, vector<Process *>, Process> typeSort;
-  priority_queue<Thread *, vector<Thread *>, Thread> threadWise;
+  priority_queue<Process *, vector<Process *>, Thread> threadWise;
 
   //read in initial values
   int numProcesses, threadSwitchOverhead, processSwitchOverhead;
@@ -82,7 +82,7 @@ int main(int argc, char* argv[]) {
     fin >> numThreads;
 
     int arrivalTime, numBursts;
-    vector<Thread> process;
+    vector<Thread *> process;
     newProcess->processID = processID;
     newProcess->processType = processType;
     newProcess->threads = process;
@@ -106,11 +106,11 @@ int main(int argc, char* argv[]) {
       newThread->state = 0;
       newThread->threadID = j;
       newThread->sumTimes();
-      newProcess->threads.push_back(*(newThread));
-      threadWise.push(newThread);
+      newProcess->threads.push_back(newThread);
       priorityQueue.push(Event(0, arrivalTime, newProcess, newThread));
     }
     processes.push_back(*(newProcess));
+    threadWise.push(newProcess);
     typeSort.push(newProcess);
   }
 
@@ -164,6 +164,8 @@ int main(int argc, char* argv[]) {
               break;
       case 5: printEvent(verbose, &thisEvent);
               thisEvent.thread->state = 4;
+              thisEvent.thread->endTime = thisEvent.eventTime;
+              cout << thisEvent.eventTime << endl;
               if (priorityQueue.size() > 0 || readyQueue.size() > 0){
                 priorityQueue.push(Event(7, thisEvent.eventTime, thisEvent.thread->parentProcess, thisEvent.thread));
               }
@@ -189,18 +191,18 @@ int main(int argc, char* argv[]) {
     }
   }
 
+  while (perThread && !threadWise.empty()) {
+    printThreadWiseProcess(threadWise.top());
+    threadWise.pop();
+  }
+
+  cout << "Simulation Completed!" << endl;
+
   while (!typeSort.empty()) {
     Process * printProcess = typeSort.top();
     cout << printProcess->processType << " : " << printProcess->threads.size() << endl;
     typeSort.pop();
   }
-
-  while (!threadWise.empty()) {
-    Thread * printThread = threadWise.top();
-    cout << printThread->parentProcess->processID << " : " << printThread->threadID << " : " << printThread->parentProcess->processType << endl;
-    threadWise.pop();
-  }
-
 
   return 0;
 }

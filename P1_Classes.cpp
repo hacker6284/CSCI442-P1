@@ -57,17 +57,15 @@ void Thread::sumTimes(){
   IOTime = io;
 }
 
-bool Thread::operator()(Thread *t1, Thread *t2){
-  if (t1->parentProcess->processID > t2->parentProcess->processID){
-    return true;
-  } else if ((t1->parentProcess->processID == t2->parentProcess->processID) && t1->threadID > t2->threadID) {
+bool Thread::operator()(Process *p1, Process *p2){
+  if (p1->processID > p2->processID){
     return true;
   } else {
     return false;
   }
 }
 
-Process::Process(int pid, int type, vector<Thread> t){
+Process::Process(int pid, int type, vector<Thread *> t){
   processID = pid;
   processType = type;
   threads = t;
@@ -76,7 +74,7 @@ Process::Process(int pid, int type, vector<Thread> t){
 Process::Process(){
   processID = 0;
   processType = 0;
-  vector<Thread> myThreads;
+  vector<Thread *> myThreads;
   threads = myThreads;
 }
 

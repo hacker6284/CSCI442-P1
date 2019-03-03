@@ -1,5 +1,6 @@
 #include <iostream>
 #include "output.h"
+#include <iomanip>
 
 using namespace std;
 
@@ -13,7 +14,12 @@ void help() {
 
 void printThread(int pid, int tid, int ptype) {
   cout << "\tThread " << tid << " ";
-  cout << "in process " << pid << " [";
+  cout << "in process " << pid;
+  processType(ptype);
+}
+
+void processType(int ptype){
+  cout << " [";
   switch (ptype){
     case 0:
     cout << "SYSTEM";
@@ -32,7 +38,6 @@ void printThread(int pid, int tid, int ptype) {
   }
   cout << "]" << endl;
 }
-
 void printEvent(bool v, Event *event) {
   if (v) {
     cout << v << endl;
@@ -97,4 +102,18 @@ void printTransition(int n){
             break;
   }
   cout << "\tTransitioned from " << firstState << " to " << secondState << endl;
+}
+
+void printThreadWiseProcess(Process* process){
+  cout << "Process " << process->processID << ":";
+  processType(process->processType);
+  for (Thread *t : process->threads){
+    cout << "Thread " << t->threadID << ":   ";
+    cout << "ARR: " << left << setw(7) << t->arrivalTime;
+    cout << "CPU: " << setw(7) << t->CPUTime;
+    cout << "I/O: " << setw(7) << t->IOTime;
+    cout << "TAT: " << setw(7) << t->endTime - t->arrivalTime;
+    cout << "END: " << setw(7) << t->endTime << endl;
+  }
+  cout << endl;
 }
