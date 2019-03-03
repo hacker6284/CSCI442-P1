@@ -189,13 +189,13 @@ int main(int argc, char* argv[]) {
               break;
     }
   }
-  
-  cout << "Simulation Completed!" << endl;
 
   while (perThread && !threadWise.empty()) {
     printThreadWiseProcess(threadWise.top());
     threadWise.pop();
   }
+
+  cout << "SIMULATION COMPLETED!" << endl;
 
   while (!typeSort.empty()) {
     Process * printProcess = typeSort.top();
