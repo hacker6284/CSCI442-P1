@@ -51,9 +51,7 @@ void Thread::sumTimes(){
   int io = 0;
   for (Burst b: bursts) {
     cpu += b.cpuTime;
-    if (b.ioTime != 0) {
-      io += b.ioTime;
-    }
+    io += b.ioTime;
   }
   CPUTime = cpu;
   IOTime = io;

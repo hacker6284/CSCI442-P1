@@ -8,7 +8,7 @@ void help();
 
 void printThread(int pid, int tid, int ptype);
 
-void printEvent(Event *event);
+void printEvent(bool v, Event *event);
 
 string printEventType(int n);
 

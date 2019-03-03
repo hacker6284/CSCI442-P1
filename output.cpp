@@ -33,7 +33,10 @@ void printThread(int pid, int tid, int ptype) {
   cout << "]" << endl;
 }
 
-void printEvent(Event *event) {
+void printEvent(bool v, Event *event) {
+  if (v) {
+    return;
+  }
   cout << "At time "<< event->eventTime << ":" << endl;
   cout << "\t" << printEventType(event->eventType) << endl;
   printThread(event->process->processID, event->thread->threadID, event->process->processType);

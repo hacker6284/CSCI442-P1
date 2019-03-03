@@ -105,6 +105,7 @@ int main(int argc, char* argv[]) {
       newThread->parentProcess = newProcess;
       newThread->state = 0;
       newThread->threadID = j;
+      newThread->sumTimes();
       newProcess->threads.push_back(*(newThread));
       threadWise.push(newThread);
       priorityQueue.push(Event(0, arrivalTime, newProcess, newThread));
@@ -129,7 +130,7 @@ int main(int argc, char* argv[]) {
 
     //giant switch statement for main logic
     switch(thisEvent.eventType){
-      case 0: printEvent(&thisEvent);
+      case 0: printEvent(verbose, &thisEvent);
               readyQueue.push(thisEvent.thread); //push this thread onto the ready queue
               thisEvent.thread->state = 1; //thread is now ready
               if (idle) {
@@ -138,7 +139,7 @@ int main(int argc, char* argv[]) {
               }
               break;
       case 1:
-      case 2: printEvent(&thisEvent);
+      case 2: printEvent(verbose, &thisEvent);
               dispatchThread = readyQueue.front();
               readyQueue.pop();
               dispatchThread->state = 2;
@@ -146,7 +147,7 @@ int main(int argc, char* argv[]) {
               priorityQueue.push(Event(3, newTime, dispatchThread->parentProcess, dispatchThread));
               break;
       case 3: if (thisEvent.thread->bursts.at(0).ioTime > 0){
-                printEvent(&thisEvent);
+                printEvent(verbose, &thisEvent);
                 thisEvent.thread->state = 3;
                 newTime = thisEvent.eventTime + thisEvent.thread->bursts.at(0).ioTime;
                 thisEvent.thread->bursts.erase(thisEvent.thread->bursts.begin());
@@ -157,17 +158,17 @@ int main(int argc, char* argv[]) {
                 thisEvent.thread->bursts.erase(thisEvent.thread->bursts.begin());
               }
               break;
-      case 4: printEvent(&thisEvent);
+      case 4: printEvent(verbose, &thisEvent);
               thisEvent.thread->state = 1;
               readyQueue.push(thisEvent.thread);
               break;
-      case 5: printEvent(&thisEvent);
+      case 5: printEvent(verbose, &thisEvent);
               thisEvent.thread->state = 4;
               if (priorityQueue.size() > 0 || readyQueue.size() > 0){
                 priorityQueue.push(Event(7, thisEvent.eventTime, thisEvent.thread->parentProcess, thisEvent.thread));
               }
               break;
-      case 6: printEvent(&thisEvent);
+      case 6: printEvent(verbose, &thisEvent);
               break;
       case 7: if (readyQueue.size() > 0){
                if (thisEvent.thread == NULL || thisEvent.thread->parentProcess != readyQueue.front()->parentProcess){
@@ -176,7 +177,7 @@ int main(int argc, char* argv[]) {
                  priorityQueue.push(Event(1, thisEvent.eventTime + threadSwitchOverhead, readyQueue.front()->parentProcess, readyQueue.front()));
                }
                Event *newEvent = new Event(7, thisEvent.eventTime, readyQueue.front()->parentProcess, readyQueue.front());
-               printEvent(newEvent);
+               printEvent(verbose, newEvent);
                cout << "\tSelected from " << readyQueue.size() << " threads; will run to completion of burst" << endl;
                cout << endl;
               } else {
