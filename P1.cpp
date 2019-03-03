@@ -165,7 +165,6 @@ int main(int argc, char* argv[]) {
       case 5: printEvent(verbose, &thisEvent);
               thisEvent.thread->state = 4;
               thisEvent.thread->endTime = thisEvent.eventTime;
-              cout << thisEvent.eventTime << endl;
               if (priorityQueue.size() > 0 || readyQueue.size() > 0){
                 priorityQueue.push(Event(7, thisEvent.eventTime, thisEvent.thread->parentProcess, thisEvent.thread));
               }
@@ -190,13 +189,13 @@ int main(int argc, char* argv[]) {
               break;
     }
   }
+  
+  cout << "Simulation Completed!" << endl;
 
   while (perThread && !threadWise.empty()) {
     printThreadWiseProcess(threadWise.top());
     threadWise.pop();
   }
-
-  cout << "Simulation Completed!" << endl;
 
   while (!typeSort.empty()) {
     Process * printProcess = typeSort.top();
