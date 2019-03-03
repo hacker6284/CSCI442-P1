@@ -13,13 +13,15 @@ void help() {
 }
 
 void printThread(int pid, int tid, int ptype) {
-  cout << "\tThread " << tid << " ";
+  cout << "    Thread " << tid << " ";
   cout << "in process " << pid;
-  processType(ptype);
+  printProcessType(true, ptype);
 }
 
-void processType(int ptype){
-  cout << " [";
+void printProcessType(bool b, int ptype){
+  if (b) {
+    cout << " [";
+  }
   switch (ptype){
     case 0:
     cout << "SYSTEM";
@@ -36,13 +38,14 @@ void processType(int ptype){
     default:
     cout << "NOTYPE";
   }
-  cout << "]" << endl;
+  if (b) {
+    cout << "]" << endl;
+  }
 }
 void printEvent(bool v, Event *event) {
   if (v) {
-    cout << v << endl;
     cout << "At time "<< event->eventTime << ":" << endl;
-    cout << "\t" << printEventType(event->eventType) << endl;
+    cout << "    " << printEventType(event->eventType) << endl;
     printThread(event->process->processID, event->thread->threadID, event->process->processType);
     if (event->eventType != 7){
       printTransition(event->eventType);
@@ -101,12 +104,12 @@ void printTransition(int n){
             secondState = "READY";
             break;
   }
-  cout << "\tTransitioned from " << firstState << " to " << secondState << endl;
+  cout << "    Transitioned from " << firstState << " to " << secondState << endl;
 }
 
 void printThreadWiseProcess(Process* process){
   cout << "Process " << process->processID << ":";
-  processType(process->processType);
+  printProcessType(true, process->processType);
   for (Thread *t : process->threads){
     cout << "Thread " << t->threadID << ":   ";
     cout << "ARR: " << left << setw(7) << t->arrivalTime;
@@ -115,5 +118,78 @@ void printThreadWiseProcess(Process* process){
     cout << "TAT: " << setw(7) << t->endTime - t->arrivalTime;
     cout << "END: " << setw(7) << t->endTime << endl;
   }
+  cout << endl;
+}
+
+void printProcessDetails(vector<Thread *>& v, int ptype){
+  printProcessType(false, ptype);
+  cout << " THREADS:" << endl;
+  cout << "    " << setw(22) << left << "Total count:";
+  cout << setw(7) << right << v.size() << endl;
+  cout << "    " << setw(22) << left << "Avg. response time:";
+  cout << setw(7) << right << fixed << setprecision(2) << calculateAvgResponse(v) << endl;
+  cout << "    " << setw(22) << left << "Avg. turnaround time:";
+  cout << setw(7) << right << fixed << setprecision(2) << calculateAvgTurnaround(v) << endl;
+}
+
+double calculateAvgResponse(vector<Thread *>& v){
+  if (v.size() == 0){
+    return 0;
+  }
+  double totalResponse = 0;
+  for (Thread *t : v){
+    totalResponse += t->responseTime;
+  }
+  return totalResponse / v.size();
+}
+
+double calculateAvgTurnaround(vector<Thread *>& v){
+  if (v.size() == 0){
+    return 0;
+  }
+  double totalTurnaround = 0;
+  for (Thread *t : v){
+    totalTurnaround += t->endTime - t->arrivalTime;
+  }
+  return totalTurnaround / v.size();
+}
+
+void groupProcesses(vector<Process>& q){
+  vector<Thread *> system;
+  vector<Thread *> interactive;
+  vector<Thread *> normal;
+  vector<Thread *> batch;
+
+  for (Process p: q){
+    vector<Thread *>* pushLoc;
+    if (p.processType == 3){
+      pushLoc = &system;
+    } else if (p.processType == 2){
+      pushLoc = &interactive;
+    } else if (p.processType == 1){
+      pushLoc = &normal;
+    } else {
+      pushLoc = &batch;
+    }
+    for (Thread * t: p.threads){
+      pushLoc->push_back(t);
+    }
+  }
+
+  printProcessDetails(batch, 0);
+  printProcessDetails(normal, 1);
+  printProcessDetails(interactive, 2);
+  printProcessDetails(system, 3);
+}
+
+void fixedPrint(string a, double b, bool i){
+  cout << setw(21) << left << a;
+
+  if(!i){
+    cout << setw(12) << right << int(b);
+  } else {
+    cout << setw(11) << right << fixed << setprecision(2) << b << "%";
+  }
+
   cout << endl;
 }

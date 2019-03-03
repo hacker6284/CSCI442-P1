@@ -14,6 +14,16 @@ string printEventType(int n);
 
 void printTransition(int n);
 
-void printThreadWiseProcess(Process* process);
+void printThreadWiseProcess(Process *process);
 
-void processType(int ptype);
+void printProcessType(bool b, int ptype);
+
+void printProcessDetails(vector<Thread *>& v, int ptype);
+
+double calculateAvgResponse(vector<Thread *>& v);
+
+double calculateAvgTurnaround(vector<Thread *>& v);
+
+void groupProcesses(vector<Process>& q);
+
+void fixedPrint(string a, double b, bool i);

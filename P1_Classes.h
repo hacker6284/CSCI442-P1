@@ -28,14 +28,13 @@ public:
   vector<Burst> bursts;
   Process *parentProcess;
   //timekeeping stuff
-  int endTime = 0;
-  int CPUTime = 0;
-  int IOTime = 0;
-  int responseTime = 0;
+  int endTime;
+  int CPUTime;
+  int IOTime;
+  int responseTime;
 
   Thread(int arrival, vector<Burst> b, Process *p, int s, int id);
   Thread();
-  bool operator()(Process *p1, Process *p2);
   void sumTimes();
 };
 

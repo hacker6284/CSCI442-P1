@@ -28,7 +28,7 @@ Thread::Thread(int arrival, vector<Burst> b, Process *p, int s, int id){
   endTime = 0;
   CPUTime = 0;
   IOTime = 0;
-  responseTime = 0;
+  responseTime = -1;
 }
 
 Thread::Thread(){
@@ -43,7 +43,7 @@ Thread::Thread(){
   endTime = 0;
   CPUTime = 0;
   IOTime = 0;
-  responseTime = 0;
+  responseTime = -1;
 }
 
 void Thread::sumTimes(){
@@ -55,14 +55,6 @@ void Thread::sumTimes(){
   }
   CPUTime = cpu;
   IOTime = io;
-}
-
-bool Thread::operator()(Process *p1, Process *p2){
-  if (p1->processID > p2->processID){
-    return true;
-  } else {
-    return false;
-  }
 }
 
 Process::Process(int pid, int type, vector<Thread *> t){
@@ -79,7 +71,7 @@ Process::Process(){
 }
 
 bool Process::operator()(Process *p1, Process *p2){
-  if (p1->processType > p2->processType){
+  if (p1->processID > p2->processID){
     return true;
   } else {
     return false;

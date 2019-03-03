@@ -62,8 +62,7 @@ int main(int argc, char* argv[]) {
   queue<Thread*> readyQueue;  //establish ready queue
 
   //create queues for threadwise output
-  priority_queue<Process *, vector<Process *>, Process> typeSort;
-  priority_queue<Process *, vector<Process *>, Thread> threadWise;
+  priority_queue<Process *, vector<Process *>, Process> threadWise;
 
   //read in initial values
   int numProcesses, threadSwitchOverhead, processSwitchOverhead;
@@ -111,7 +110,6 @@ int main(int argc, char* argv[]) {
     }
     processes.push_back(*(newProcess));
     threadWise.push(newProcess);
-    typeSort.push(newProcess);
   }
 
   //close the stream
@@ -119,6 +117,13 @@ int main(int argc, char* argv[]) {
 
   //set beginning state
   bool idle = true;
+
+  //set integers for record-keeping
+  int elapsedTime = 0;
+  int serviceTime = 0;
+  int ioTime = 0;
+  int idleTime = 0;
+  int dispatchTime = 0;
 
   //output events
   while (!priorityQueue.empty()){
@@ -143,13 +148,18 @@ int main(int argc, char* argv[]) {
               dispatchThread = readyQueue.front();
               readyQueue.pop();
               dispatchThread->state = 2;
+              if (dispatchThread->responseTime == -1){
+                dispatchThread->responseTime = thisEvent.eventTime - dispatchThread->arrivalTime;
+              }
               newTime = thisEvent.eventTime + dispatchThread->bursts.at(0).cpuTime;
+              serviceTime += newTime - thisEvent.eventTime;
               priorityQueue.push(Event(3, newTime, dispatchThread->parentProcess, dispatchThread));
               break;
       case 3: if (thisEvent.thread->bursts.at(0).ioTime > 0){
                 printEvent(verbose, &thisEvent);
                 thisEvent.thread->state = 3;
                 newTime = thisEvent.eventTime + thisEvent.thread->bursts.at(0).ioTime;
+                ioTime += newTime - thisEvent.eventTime;
                 thisEvent.thread->bursts.erase(thisEvent.thread->bursts.begin());
                 priorityQueue.push(Event(4, newTime, thisEvent.thread->parentProcess, thisEvent.thread));
                 priorityQueue.push(Event(7, thisEvent.eventTime, thisEvent.thread->parentProcess, thisEvent.thread));
@@ -165,6 +175,7 @@ int main(int argc, char* argv[]) {
       case 5: printEvent(verbose, &thisEvent);
               thisEvent.thread->state = 4;
               thisEvent.thread->endTime = thisEvent.eventTime;
+              elapsedTime = thisEvent.eventTime;
               if (priorityQueue.size() > 0 || readyQueue.size() > 0){
                 priorityQueue.push(Event(7, thisEvent.eventTime, thisEvent.thread->parentProcess, thisEvent.thread));
               }
@@ -174,17 +185,20 @@ int main(int argc, char* argv[]) {
       case 7: if (readyQueue.size() > 0){
                if (thisEvent.thread == NULL || thisEvent.thread->parentProcess != readyQueue.front()->parentProcess){
                  priorityQueue.push(Event(2, thisEvent.eventTime + processSwitchOverhead, readyQueue.front()->parentProcess, readyQueue.front()));
+                 dispatchTime += processSwitchOverhead;
                } else {
                  priorityQueue.push(Event(1, thisEvent.eventTime + threadSwitchOverhead, readyQueue.front()->parentProcess, readyQueue.front()));
+                 dispatchTime += threadSwitchOverhead;
                }
                Event *newEvent = new Event(7, thisEvent.eventTime, readyQueue.front()->parentProcess, readyQueue.front());
                printEvent(verbose, newEvent);
                if (verbose) {
-                 cout << "\tSelected from " << readyQueue.size() << " threads; will run to completion of burst" << endl;
+                 cout << "    Selected from " << readyQueue.size() << " threads; will run to completion of burst" << endl;
                  cout << endl;
                }
               } else {
                priorityQueue.push(Event(7, priorityQueue.top().eventTime, thisEvent.thread->parentProcess, thisEvent.thread));
+               idleTime += priorityQueue.top().eventTime - thisEvent.eventTime;
               }
               break;
     }
@@ -195,13 +209,20 @@ int main(int argc, char* argv[]) {
     threadWise.pop();
   }
 
-  cout << "SIMULATION COMPLETED!" << endl;
+  cout << "SIMULATION COMPLETED!" << endl << endl;
 
-  while (!typeSort.empty()) {
-    Process * printProcess = typeSort.top();
-    cout << printProcess->processType << " : " << printProcess->threads.size() << endl;
-    typeSort.pop();
-  }
+  groupProcesses(processes);
+
+  cout << endl;
+
+  fixedPrint("Total elapsed time: ", elapsedTime, false);
+  fixedPrint("Total service time: ", serviceTime, false);
+  fixedPrint("Total I/O time: ", ioTime, false);
+  fixedPrint("Total dispatch time: ", dispatchTime, false);
+  fixedPrint("Total idle time: ", idleTime, false);
+  cout << endl;
+  fixedPrint("CPU utilization: ", 100 * double(elapsedTime - idleTime) / double(elapsedTime), true);
+  fixedPrint("CPU efficiency: ", 100 * double(serviceTime) / double(elapsedTime), true);
 
   return 0;
 }
