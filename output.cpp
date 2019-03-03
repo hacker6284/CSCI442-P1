@@ -35,14 +35,14 @@ void printThread(int pid, int tid, int ptype) {
 
 void printEvent(bool v, Event *event) {
   if (v) {
-    return;
-  }
-  cout << "At time "<< event->eventTime << ":" << endl;
-  cout << "\t" << printEventType(event->eventType) << endl;
-  printThread(event->process->processID, event->thread->threadID, event->process->processType);
-  if (event->eventType != 7){
-    printTransition(event->eventType);
-    cout << endl;
+    cout << v << endl;
+    cout << "At time "<< event->eventTime << ":" << endl;
+    cout << "\t" << printEventType(event->eventType) << endl;
+    printThread(event->process->processID, event->thread->threadID, event->process->processType);
+    if (event->eventType != 7){
+      printTransition(event->eventType);
+      cout << endl;
+    }
   }
 }
 

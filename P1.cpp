@@ -178,8 +178,10 @@ int main(int argc, char* argv[]) {
                }
                Event *newEvent = new Event(7, thisEvent.eventTime, readyQueue.front()->parentProcess, readyQueue.front());
                printEvent(verbose, newEvent);
-               cout << "\tSelected from " << readyQueue.size() << " threads; will run to completion of burst" << endl;
-               cout << endl;
+               if (verbose) {
+                 cout << "\tSelected from " << readyQueue.size() << " threads; will run to completion of burst" << endl;
+                 cout << endl;
+               }
               } else {
                priorityQueue.push(Event(7, priorityQueue.top().eventTime, thisEvent.thread->parentProcess, thisEvent.thread));
               }
