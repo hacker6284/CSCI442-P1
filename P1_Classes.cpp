@@ -23,6 +23,12 @@ Thread::Thread(int arrival, vector<Burst> b, Process *p, int s, int id){
   parentProcess = p;
   state = s;
   threadID = id;
+
+  //timekeeping stuff
+  endTime = 0;
+  CPUTime = 0;
+  IOTime = 0;
+  responseTime = 0;
 }
 
 Thread::Thread(){
@@ -32,6 +38,25 @@ Thread::Thread(){
   parentProcess = NULL;
   state = 0;
   threadID = 0;
+
+  //timekeeping stuff
+  endTime = 0;
+  CPUTime = 0;
+  IOTime = 0;
+  responseTime = 0;
+}
+
+void Thread::sumTimes(){
+  int cpu = 0;
+  int io = 0;
+  for (Burst b: bursts) {
+    cpu += b.cpuTime;
+    if (b.ioTime != 0) {
+      io += b.ioTime;
+    }
+  }
+  CPUTime = cpu;
+  IOTime = io;
 }
 
 bool Thread::operator()(Thread *t1, Thread *t2){
