@@ -1,6 +1,6 @@
 CC=g++
 CFLAGS=-c -g -std=c++11
-SOURCES=P1.cpp P1_Classes.cpp
+SOURCES=P1.cpp P1_Classes.cpp output.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 LIBS=
 LDFLAGS=

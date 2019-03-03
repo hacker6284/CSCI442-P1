@@ -1,7 +1,7 @@
 /*******************************************************
  *CSCI442 Project 1 Deliverable 1
  *Author: Zach Mills
- *Date: October 1, 2018
+ *Date: February 8, 2019
  *******************************************************/
 
 #include <iostream>
@@ -10,6 +10,8 @@
 #include <vector>
 
 using namespace std;
+
+class Process;
 
 class Burst{
 public:
@@ -20,9 +22,14 @@ public:
 
 class Thread{
 public:
+  int threadID;
+  int state;
   int arrivalTime;
   vector<Burst> bursts;
-  Thread(int arrival, vector<Burst> b);
+  Process *parentProcess;
+  Thread(int arrival, vector<Burst> b, Process *p, int s, int id);
+  Thread();
+  bool operator()(Thread *t1, Thread *t2);
 };
 
 class Process{
@@ -31,13 +38,17 @@ public:
   int processType;
   vector<Thread> threads;
   Process(int pid, int type, vector<Thread> t);
+  Process();
+  bool operator()(Process *p1, Process *p2);
 };
 
 class Event{
 public:
+  Process *process;
+  Thread *thread;
   int eventType;
   int eventTime;
-  Event(int type, int t);
+  Event(int type, int t, Process *p, Thread *thr);
   Event();
   bool operator()(Event e1, Event e2);
 };
