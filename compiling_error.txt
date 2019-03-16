@@ -1,0 +1,6 @@
+ld: warning: ignoring file /Users/zachmills/Documents/CSCI442/Spring 2019/Projects/P1/Makefile, file was built for unsupported file format ( 0x43 0x43 0x3D 0x67 0x2B 0x2B 0x0A 0x43 0x46 0x4C 0x41 0x47 0x53 0x3D 0x2D 0x63 ) which is not the architecture being linked (x86_64): /Users/zachmills/Documents/CSCI442/Spring 2019/Projects/P1/Makefile
+Undefined symbols for architecture x86_64:
+  "_main", referenced from:
+     implicit entry/start for main executable
+ld: symbol(s) not found for architecture x86_64
+clang: error: linker command failed with exit code 1 (use -v to see invocation)

@@ -16,7 +16,7 @@
 
 using namespace std;
 
-bool allQueuesEmpty(queue<Thread *> &priorities [4]){
+bool allQueuesEmpty(queue<Thread *> (&priorities) [4]){
   for (int i = 0; i < 4; i++){
     if (!priorities[i].empty()){
       return false;
