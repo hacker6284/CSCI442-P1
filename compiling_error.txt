@@ -1,6 +1,31 @@
-ld: warning: ignoring file /Users/zachmills/Documents/CSCI442/Spring 2019/Projects/P1/Makefile, file was built for unsupported file format ( 0x43 0x43 0x3D 0x67 0x2B 0x2B 0x0A 0x43 0x46 0x4C 0x41 0x47 0x53 0x3D 0x2D 0x63 ) which is not the architecture being linked (x86_64): /Users/zachmills/Documents/CSCI442/Spring 2019/Projects/P1/Makefile
 Undefined symbols for architecture x86_64:
-  "_main", referenced from:
-     implicit entry/start for main executable
+  "fixedPrint(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, double, bool)", referenced from:
+      _main in P1-b58542.o
+  "printEvent(bool, Event*)", referenced from:
+      _main in P1-b58542.o
+  "groupProcesses(std::__1::vector<Process, std::__1::allocator<Process> >&)", referenced from:
+      _main in P1-b58542.o
+  "printThreadWiseProcess(Process*)", referenced from:
+      _main in P1-b58542.o
+  "help()", referenced from:
+      _main in P1-b58542.o
+  "Burst::Burst(int, int)", referenced from:
+      _main in P1-b58542.o
+  "Event::Event(int, int, Process*, Thread*)", referenced from:
+      _main in P1-b58542.o
+  "Event::Event()", referenced from:
+      _main in P1-b58542.o
+  "Event::operator()(Event, Event)", referenced from:
+      void std::__1::__sift_up<Event&, std::__1::__wrap_iter<Event*> >(std::__1::__wrap_iter<Event*>, std::__1::__wrap_iter<Event*>, Event&, std::__1::iterator_traits<std::__1::__wrap_iter<Event*> >::difference_type) in P1-b58542.o
+      void std::__1::__sift_down<Event&, std::__1::__wrap_iter<Event*> >(std::__1::__wrap_iter<Event*>, std::__1::__wrap_iter<Event*>, Event&, std::__1::iterator_traits<std::__1::__wrap_iter<Event*> >::difference_type, std::__1::__wrap_iter<Event*>) in P1-b58542.o
+  "Thread::sumTimes()", referenced from:
+      _main in P1-b58542.o
+  "Thread::Thread()", referenced from:
+      _main in P1-b58542.o
+  "Process::Process()", referenced from:
+      _main in P1-b58542.o
+  "Process::operator()(Process*, Process*)", referenced from:
+      void std::__1::__sift_up<Process&, std::__1::__wrap_iter<Process**> >(std::__1::__wrap_iter<Process**>, std::__1::__wrap_iter<Process**>, Process&, std::__1::iterator_traits<std::__1::__wrap_iter<Process**> >::difference_type) in P1-b58542.o
+      void std::__1::__sift_down<Process&, std::__1::__wrap_iter<Process**> >(std::__1::__wrap_iter<Process**>, std::__1::__wrap_iter<Process**>, Process&, std::__1::iterator_traits<std::__1::__wrap_iter<Process**> >::difference_type, std::__1::__wrap_iter<Process**>) in P1-b58542.o
 ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)

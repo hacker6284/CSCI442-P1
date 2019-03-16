@@ -1,6 +1,6 @@
 CC=g++
 CFLAGS=-c -g -std=c++11
-SOURCES=P1.cpp P1_Classes.cpp output.cpp
+SOURCES=P1.cpp P1_Classes.cpp output.cpp Handler.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 LIBS=
 LDFLAGS=
@@ -24,3 +24,6 @@ include .depend
 
 clean:
 	rm -f .depend $(PROGRAM) $(OBJECTS)
+
+run:
+	./$(PROGRAM) -vt example_simulation.txt

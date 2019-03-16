@@ -1,3 +1,4 @@
-P1.o: P1.cpp output.h P1_Classes.h
+P1.o: P1.cpp Handler.h output.h P1_Classes.h
 P1_Classes.o: P1_Classes.cpp P1_Classes.h
 output.o: output.cpp output.h P1_Classes.h
+Handler.o: Handler.cpp output.h P1_Classes.h
