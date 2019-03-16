@@ -16,7 +16,7 @@
 
 using namespace std;
 
-bool allQueuesEmpty(queue<Thread *> &priorities [4]){
+bool allQueuesEmpty(queue<Thread *> (&priorities) [4]){
   for (int i = 0; i < 4; i++){
     if (!priorities[i].empty()){
       return false;
@@ -25,7 +25,7 @@ bool allQueuesEmpty(queue<Thread *> &priorities [4]){
   return true;
 }
 
-int numThreads(queue<Thread *> (&priorities) [4], queue<Thread *> & readyQueue){
+int sumThreads(queue<Thread *> (&priorities) [4], queue<Thread *> & readyQueue){
   int num = 0;
   num += readyQueue.size();
   for (int i = 0; i < 4; i++){
@@ -168,13 +168,16 @@ int main(int argc, char* argv[]) {
       //thread arrived
       case 0: printEvent(verbose, &thisEvent);
 
+
               if (algorithm == 2){
                 priorities[thisEvent.process->processType].push(thisEvent.thread);
+
               } else {
                 readyQueue.push(thisEvent.thread); //push this thread onto the ready queue
               }
               thisEvent.thread->state = 1; //thread is now ready
               if (idle) {
+
                 priorityQueue.push(Event(7, thisEvent.eventTime, NULL, NULL)); //invoke the dispatcher
                 idle = false;
               }
@@ -230,7 +233,7 @@ int main(int argc, char* argv[]) {
               thisEvent.thread->state = 4;
               thisEvent.thread->endTime = thisEvent.eventTime;
               records["elapsedTime"] = thisEvent.eventTime;
-              if (priorityQueue.size() > 0 || readyQueue.size() > 0){
+              if (priorityQueue.size() > 0 || readyQueue.size() > 0 || !allQueuesEmpty(priorities)){
                 priorityQueue.push(Event(7, thisEvent.eventTime, thisEvent.thread->parentProcess, thisEvent.thread));
               }
               break;
@@ -241,7 +244,8 @@ int main(int argc, char* argv[]) {
               priorityQueue.push(Event(7, thisEvent.eventTime, thisEvent.thread->parentProcess, thisEvent.thread));
               break;
       //dispatcher invoked
-      case 7: if (readyQueue.size() > 0 && allQueuesEmpty()){
+      case 7: if (!readyQueue.empty() || !allQueuesEmpty(priorities)){
+                cout << "Hey" << endl;
                 if (algorithm == 2){
                   for (int i = 0; i < 4; i++){
                     if (!priorities[i].empty()){
@@ -264,7 +268,7 @@ int main(int argc, char* argv[]) {
                 Event *newEvent = new Event(7, thisEvent.eventTime, dispatchThread->parentProcess, dispatchThread);
                 printEvent(verbose, newEvent);
                 if (verbose) {
-                 cout << "    Selected from " << numThreads + 1 << " threads; ";
+                  cout << "    Selected from " << sumThreads(priorities, readyQueue) + 1 << " threads; ";
                  if (algorithm == 1 && newEvent->thread->bursts.at(0).cpuTime > quantum) {
                    cout << "alloted time slice of 3" << endl;
                  } else {
