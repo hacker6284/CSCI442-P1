@@ -19,7 +19,7 @@ This project simulates a CPU scheduler, which can use First-come, first-served, 
 
 `simulator -h`
 
-or
+*or*
 
 `simulator --help`
 
