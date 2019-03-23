@@ -15,7 +15,9 @@
 9. *output.cpp* - implementation of output format functions declared in the header
 
 ## Project Description:
-This project simulates a CPU scheduler, which can use First-come, first-served, round robin, and priority-based scheduling algorithms to schedule processes described in an input file. There is also a custom algorithm of my own design, which is described below. The usage of the program can be found by running `simulator -h` or `simulator --help` and an example of an input file can be found in *example_simulation.txt.*
+This project simulates a CPU scheduler, which can use First-come, first-served, round robin, and priority-based scheduling algorithms to schedule processes described in an input file. There is also a custom algorithm of my own design, which is described below. The usage of the program can be found by running
+`simulator -h` or `simulator --help`
+and an example of an input file can be found in *example_simulation.txt.*
 
 ## Custom Algorithm:
 
