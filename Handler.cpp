@@ -67,7 +67,7 @@ void handleEvent(priority_queue<Event, vector<Event>, Event>& priorityQueue, que
               dispatchThread->responseTime = thisEvent.eventTime - dispatchThread->arrivalTime;
             }
 
-            if (algorithm == 1 && dispatchThread->bursts.at(0).cpuTime > quantum) {
+            if ((algorithm == 1 || algorithm == 3) && dispatchThread->bursts.at(0).cpuTime > quantum) {
               newTime = thisEvent.eventTime + quantum;
               records["serviceTime"] += quantum;
               eventType = 6;
@@ -115,13 +115,16 @@ void handleEvent(priority_queue<Event, vector<Event>, Event>& priorityQueue, que
     //thread preempted
     case 6: printEvent(verbose, &thisEvent);
             thisEvent.thread->state = 1;
-            readyQueue.push(thisEvent.thread);
+            if (algorithm == 3){
+              priorities[thisEvent.process->processType].push(thisEvent.thread);
+            } else {
+              readyQueue.push(thisEvent.thread);
+            }
             priorityQueue.push(Event(7, thisEvent.eventTime, thisEvent.thread->parentProcess, thisEvent.thread));
             break;
     //dispatcher invoked
     case 7: if (!readyQueue.empty() || !allQueuesEmpty(priorities)){
-              cout << "Hey" << endl;
-              if (algorithm == 2){
+              if (algorithm == 2 || (algorithm == 3 && !allQueuesEmpty(priorities) && (readyQueue.empty() || readyQueue.front()->parentProcess->processID != thisEvent.process->processID))){
                 for (int i = 0; i < 4; i++){
                   if (!priorities[i].empty()){
                     dispatchThread = priorities[i].front();
@@ -141,11 +144,14 @@ void handleEvent(priority_queue<Event, vector<Event>, Event>& priorityQueue, que
                 records["dispatchTime"] += threadSwitchOverhead;
               }
               Event *newEvent = new Event(7, thisEvent.eventTime, dispatchThread->parentProcess, dispatchThread);
+              if (algorithm == 3) {
+                quantum = 5 - dispatchThread->parentProcess->processType;
+              }
               printEvent(verbose, newEvent);
               if (verbose) {
                 cout << "    Selected from " << sumThreads(priorities, readyQueue) + 1 << " threads; ";
-               if (algorithm == 1 && newEvent->thread->bursts.at(0).cpuTime > quantum) {
-                 cout << "alloted time slice of 3" << endl;
+               if ((algorithm == 1 || algorithm == 3) && newEvent->thread->bursts.at(0).cpuTime > quantum) {
+                 cout << "alloted time slice of " << quantum << endl;
                } else {
                  cout << "will run to completion of burst" << endl;
                }

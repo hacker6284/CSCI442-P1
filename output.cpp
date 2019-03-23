@@ -115,7 +115,7 @@ void printThreadWiseProcess(Process* process){
     cout << "ARR: " << left << setw(7) << t->arrivalTime;
     cout << "CPU: " << setw(7) << t->CPUTime;
     cout << "I/O: " << setw(7) << t->IOTime;
-    cout << "TAT: " << setw(7) << t->endTime - t->arrivalTime;
+    cout << "TRT: " << setw(7) << t->endTime - t->arrivalTime;
     cout << "END: " << setw(7) << t->endTime << endl;
   }
   cout << endl;

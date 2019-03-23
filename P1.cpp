@@ -20,7 +20,8 @@ int main(int argc, char* argv[]) {
 
   bool verbose = false;
   bool perThread = false;
-  int algorithm = 2;  //priority
+  int algorithm = 0;  //FCFS
+  string algorithm_str = "NONE";
 
   //Check flags
   switch (argc) {
@@ -36,18 +37,54 @@ int main(int argc, char* argv[]) {
     break;
     default:
 
+
     for (int i = 1; i < argc; i++) {
-      if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
-        help();
-        return 0;
-      } else if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--verbose") == 0) {
-        verbose = true;
-      } else if (strcmp(argv[i], "-t") == 0 || strcmp(argv[i], "--per_thread") == 0) {
-        perThread = true;
-      } else if (strcmp(argv[i], "-tv") == 0 || strcmp(argv[i], "-vt") == 0) {
-        perThread = true;
-        verbose = true;
+      if (argv[i][0] == '-') {
+        if (argv[i][1] == '-') {
+          //two dashes case
+          if (strcmp(argv[i], "--verbose") == 0){
+            verbose = true;
+          } else if (strcmp(argv[i], "--per-thread") == 0){
+            perThread = true;
+          } else if (strcmp(argv[i], "--algorithm") == 0){
+            algorithm_str = argv[i+1];
+            i++;
+        } else {
+          cout << "Unknown flag" << endl;
+          exit(3);
+        }
+      } else {
+        for (int j = 1; j < strlen(argv[i]); j++){
+          if (argv[i][j] == 'v') {
+            verbose = true;
+          } else if (argv[i][j] == 't') {
+            perThread = true;
+          } else if (argv[i][j] == 'a') {
+            algorithm_str = argv[i+1];
+            i++;
+            break;
+          } else {
+            cout << "Unknown flag" << endl;
+            exit(4);
+          }
+        }
       }
+    }
+  }
+  }
+
+if (algorithm_str != "NONE"){
+    if (algorithm_str == "FCFS"){
+      algorithm = 0;
+    } else if (algorithm_str == "RR"){
+      algorithm = 1;
+    } else if (algorithm_str == "PRIORITY"){
+      algorithm = 2;
+    } else if (algorithm_str == "CUSTOM"){
+      algorithm = 3;
+    } else {
+      cout << "Unknown Algorithm" << endl;
+      exit(2);
     }
   }
 

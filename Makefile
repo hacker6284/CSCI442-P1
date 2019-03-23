@@ -26,4 +26,4 @@ clean:
 	rm -f .depend $(PROGRAM) $(OBJECTS)
 
 run:
-	./$(PROGRAM) -vt example_simulation.txt
+	./$(PROGRAM) -vta CUSTOM example_simulation.txt
